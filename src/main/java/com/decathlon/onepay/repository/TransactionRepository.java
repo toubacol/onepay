@@ -1,0 +1,9 @@
+package com.decathlon.onepay.repository;
+
+import com.decathlon.onepay.entity.Transaction;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface TransactionRepository extends JpaRepository<Transaction, Long> {
+}
