@@ -18,6 +18,8 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
+import static com.decathlon.onepay.Util.Constant.*;
+
 @Service
 @Transactional
 @AllArgsConstructor
@@ -57,7 +59,7 @@ public class TransactionService {
      * @param id
      * @return
      */
-    public TransactionDto getById(@NotNull Long id) {
+    public TransactionDto getById(Long id) {
         log.info("fetching transaction with id={}", id);
         return mapper.toDto(findTransactionById(id));
     }
@@ -69,7 +71,10 @@ public class TransactionService {
      */
     private Transaction findTransactionById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new TransactionNotFoundException("Transaction not found"));
+                .orElseThrow(() -> {
+                    log.error(TRANSACTION_NOT_FOUND + " : id = {}", id);
+                    return new TransactionNotFoundException(TRANSACTION_NOT_FOUND);
+                });
     }
 
     /**
@@ -96,11 +101,12 @@ public class TransactionService {
      */
     private void checkRules(TransactionUpdateDto dto, Transaction entity) {
         if(TransactionStatus.CAPTURED.equals(entity.getStatus())) {
-            throw new TransactionServiceException("Not updatable transaction");
+            log.error(NOT_UPDATABLE_TRANSACTION_LOG_MESSAGE + " id = {}", entity.getId());
+            throw new TransactionServiceException(NOT_UPDATABLE_TRANSACTION);
         }
         if(TransactionStatus.CAPTURED.equals(dto.getStatus()) && !TransactionStatus.AUTHORIZED.equals(entity.getStatus())){
-            // not allowed operation
-            throw new TransactionServiceException("Invalid payment transaction status");
+            log.error(INVALID_PAYMENT_TRANSACTION_STATUS_LOG_MESSAGE + " id = {}", entity.getId());
+            throw new TransactionServiceException(INVALID_PAYMENT_TRANSACTION_STATUS);
         }
     }
 

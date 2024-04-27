@@ -15,7 +15,6 @@ public interface OrderMapper {
 
     OrderDto toDto(Order entity);
 
-    OrderCreateDto toCreateDto(Order entity);
     List<Order> toEntity(List<OrderCreateDto> orderCreateDtoList);
 
     List<OrderDto> toDto(List<Order> entity);

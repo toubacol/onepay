@@ -19,8 +19,6 @@ public abstract class TransactionMapper {
 
     public abstract TransactionDto toDto(Transaction entity);
 
-    public abstract TransactionCreateDto toCreateDto(Transaction entity);
-
     public abstract List<TransactionDto> toDto(List<Transaction> entityList);
 
     /**
